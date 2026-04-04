@@ -1,12 +1,23 @@
 "use client";
 
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Minus, Plus, ShoppingBag } from "lucide-react";
+import { X, Minus, Plus, ShoppingBag, Loader2 } from "lucide-react";
 import { useCart } from "../context/CartContext";
 import Image from "next/image";
 
 export default function CartSidebar() {
   const { items, isCartOpen, setIsCartOpen, updateQuantity, removeFromCart, cartTotal } = useCart();
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+
+  const handleCheckout = () => {
+    setIsCheckingOut(true);
+    // Simulate checkout process
+    setTimeout(() => {
+      setIsCheckingOut(false);
+      alert("Checkout simulation complete!");
+    }, 2000);
+  };
 
   return (
     <AnimatePresence>
@@ -104,8 +115,21 @@ export default function CartSidebar() {
                   <span className="text-sm font-bold uppercase tracking-widest text-white/60">Total</span>
                   <span className="text-2xl font-black text-white">${cartTotal.toFixed(2)}</span>
                 </div>
-                <button className="w-full py-4 bg-primary-red hover:bg-white hover:text-black text-white text-sm font-black tracking-widest uppercase transition-colors duration-300 relative overflow-hidden group">
-                  <span className="relative z-10">Proceed to Checkout</span>
+                <button
+                  onClick={handleCheckout}
+                  disabled={isCheckingOut}
+                  className="w-full h-14 flex items-center justify-center bg-primary-red hover:bg-white hover:text-black text-white text-sm font-black tracking-widest uppercase transition-colors duration-300 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    {isCheckingOut ? (
+                      <>
+                        <Loader2 className="animate-spin" size={20} />
+                        Processing...
+                      </>
+                    ) : (
+                      "Proceed to Checkout"
+                    )}
+                  </span>
                 </button>
               </div>
             )}
