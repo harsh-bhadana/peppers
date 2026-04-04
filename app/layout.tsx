@@ -22,7 +22,6 @@ import { CartProvider } from "./context/CartContext";
 import CartSidebar from "./components/CartSidebar";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import CustomCursor from "./components/CustomCursor";
 
 export default function RootLayout({
   children,
@@ -35,7 +34,6 @@ export default function RootLayout({
         className={`${oswald.variable} ${inter.variable} font-sans antialiased bg-black text-white`}
       >
         <CartProvider>
-          <CustomCursor />
           <Header />
           <CartSidebar />
           {children}
