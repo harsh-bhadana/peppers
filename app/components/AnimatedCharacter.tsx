@@ -31,7 +31,7 @@ export default function AnimatedCharacter({
 
   return (
     <span 
-      className={`inline-grid align-baseline relative ${className}`}
+      className={`inline-grid align-top relative ${className}`}
       aria-hidden="true"
     >
       {/* Ghost Character: Keeps the space and baseline perfectly consistent */}
@@ -47,7 +47,7 @@ export default function AnimatedCharacter({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="col-start-1 row-start-1 flex items-center justify-center leading-none select-none"
+            className="col-start-1 row-start-1 flex items-center justify-center select-none"
           >
             {char}
           </motion.span>
@@ -61,7 +61,7 @@ export default function AnimatedCharacter({
             className="col-start-1 row-start-1 flex items-center justify-center text-primary-red select-none"
           >
             <Pizza 
-              className="w-[0.73em] h-[0.73em] drop-shadow-[0_0_15px_rgba(255,59,48,0.5)] translate-y-[0.18em]" 
+              className="w-[0.85em] h-[0.85em] drop-shadow-[0_0_15px_rgba(255,59,48,0.5)] translate-y-[0.12em]" 
               strokeWidth={2.5} 
             />
           </motion.span>

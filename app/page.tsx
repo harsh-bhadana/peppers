@@ -7,8 +7,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Pizza } from "lucide-react";
 import { useState, useEffect } from "react";
 
-import AnimatedCharacter from "./components/AnimatedCharacter";
-
 export default function Home() {
   return (
     <>
@@ -36,7 +34,7 @@ export default function Home() {
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
             className="text-6xl font-black tracking-tighter uppercase sm:text-8xl md:text-9xl text-white hover:text-primary-red transition-colors duration-500 cursor-default select-none"
           >
-            pepper&apos;s Pizz<AnimatedCharacter char="A" />
+            pepper&apos;s PizzA
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 10 }}
