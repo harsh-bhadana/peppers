@@ -102,8 +102,13 @@ export default function Header() {
           </button>
         </div>
 
-        {/* Social Media - Desktop */}
+        {/* Actions & Social Media - Desktop */}
         <div className="hidden md:flex flex-1 justify-end items-center gap-6">
+          <Link href="/menu" className="relative group overflow-hidden px-6 py-2 border border-primary-red/50 hover:border-primary-red text-primary-red transition-all duration-300">
+            <span className="relative z-10 text-[10px] font-black tracking-widest uppercase">Order Now</span>
+            <div className="absolute inset-0 bg-primary-red/20 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+          </Link>
+          <div className="w-px h-6 bg-white/10" />
           <SocialIconWithPreview 
             icon={<Instagram size={20} />} 
             previewImage="/assets/shared/ig_preview.png" 
@@ -169,6 +174,21 @@ export default function Header() {
                   })}
                 </ul>
               </nav>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                className="mt-12"
+              >
+                <Link
+                  href="/menu"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block w-full text-center py-4 bg-primary-red text-white text-sm font-black tracking-widest uppercase hover:bg-white hover:text-black transition-colors duration-300"
+                >
+                  Order Now
+                </Link>
+              </motion.div>
 
               <motion.div 
                 initial={{ opacity: 0 }}
