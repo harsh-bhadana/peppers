@@ -182,19 +182,13 @@ export default function Header() {
           <div className="flex items-center gap-4">
             <SocialIconWithPreview 
               icon={<Instagram size={18} />} 
-              previewImage="/assets/shared/ig_preview.png" 
               href="#" 
-              label="Instagram"
-              position="bottom"
               brandColor="hover:text-[#E4405F]"
               glowColor="rgba(228, 64, 95, 0.6)"
             />
             <SocialIconWithPreview 
               icon={<XIcon size={16} />} 
-              previewImage="/assets/shared/tw_preview.png" 
               href="#" 
-              label="X"
-              position="bottom"
               brandColor="hover:text-white"
               glowColor="rgba(255, 255, 255, 0.6)"
             />

@@ -64,27 +64,21 @@ export default function Footer() {
             <div className="flex gap-4">
               <SocialIconWithPreview 
                 icon={<Instagram size={18} />} 
-                previewImage="/assets/shared/ig_preview.png" 
                 href="#" 
-                label="Instagram"
                 className="flex h-10 w-10 items-center justify-center rounded-full border border-white/5 transition-all duration-300"
                 brandColor="text-[#E4405F] border-[#E4405F]/50"
                 glowColor="rgba(228, 64, 95, 0.4)"
               />
               <SocialIconWithPreview 
                 icon={<XIcon size={16} />} 
-                previewImage="/assets/shared/tw_preview.png" 
                 href="#" 
-                label="X"
                 className="flex h-10 w-10 items-center justify-center rounded-full border border-white/5 transition-all duration-300"
                 brandColor="text-white border-white/50"
                 glowColor="rgba(255, 255, 255, 0.4)"
               />
               <SocialIconWithPreview 
                 icon={<Facebook size={18} />} 
-                previewImage="/assets/shared/fb_preview.png" 
                 href="#" 
-                label="Facebook"
                 className="flex h-10 w-10 items-center justify-center rounded-full border border-white/5 transition-all duration-300"
                 brandColor="text-[#1877F2] border-[#1877F2]/50"
                 glowColor="rgba(24, 119, 242, 0.4)"
