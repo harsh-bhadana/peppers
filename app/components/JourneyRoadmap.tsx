@@ -44,6 +44,7 @@ const stops: Stop[] = [
 
 export default function JourneyRoadmap() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const isPaused = useRef(false);
   const { scrollXProgress } = useScroll({
     container: containerRef,
   });
@@ -52,11 +53,26 @@ export default function JourneyRoadmap() {
     const el = containerRef.current;
     if (!el) return;
 
+    let animationId: number;
+    const scrollSpeed = 0.8; // pixels per frame
+
+    const scroll = () => {
+      if (!isPaused.current) {
+        el.scrollLeft += scrollSpeed;
+        
+        // Reset when reaching the end
+        if (el.scrollLeft >= el.scrollWidth - el.clientWidth - 1) {
+          el.scrollLeft = 0;
+        }
+      }
+      animationId = requestAnimationFrame(scroll);
+    };
+
+    animationId = requestAnimationFrame(scroll);
+
     const onWheel = (e: WheelEvent) => {
       if (e.deltaY === 0) return;
       
-      // If we're at the beginning and trying to scroll left, or at the end and trying to scroll right,
-      // let the default behavior (page scroll) happen.
       const isAtStart = el.scrollLeft === 0;
       const isAtEnd = Math.abs(el.scrollWidth - el.clientWidth - el.scrollLeft) < 1;
       
@@ -66,13 +82,17 @@ export default function JourneyRoadmap() {
 
       e.preventDefault();
       el.scrollTo({
-        left: el.scrollLeft + e.deltaY * 2, // Multiply for faster scrolling
+        left: el.scrollLeft + e.deltaY * 2,
         behavior: "smooth"
       });
     };
 
     el.addEventListener("wheel", onWheel, { passive: false });
-    return () => el.removeEventListener("wheel", onWheel);
+    
+    return () => {
+      cancelAnimationFrame(animationId);
+      el.removeEventListener("wheel", onWheel);
+    };
   }, []);
 
   const scaleX = useSpring(scrollXProgress, {
@@ -99,12 +119,14 @@ export default function JourneyRoadmap() {
         <h2 className="text-sm font-black uppercase tracking-[0.3em] text-primary-red">Our Journey</h2>
           <h3 className="text-4xl md:text-6xl font-black uppercase tracking-tighter text-white">The Winding <span className="text-primary-red">Path</span></h3>
         </div>
-        <div className="text-right text-[10px] font-black uppercase tracking-widest text-white/40 mb-2">
-          Scroll Horizontally To Explore
+        <div className="text-right text-[10px] font-black uppercase tracking-widest text-white/40 mb-2 px-6">
+          Auto-Exploring Path (Hover to Pause)
         </div>
 
       <div 
         ref={containerRef}
+        onMouseEnter={() => (isPaused.current = true)}
+        onMouseLeave={() => (isPaused.current = false)}
         className="w-full overflow-x-auto overflow-y-hidden no-scrollbar bg-black/40 backdrop-blur-xl border-y border-white/10"
       >
         <div className="relative w-[3000px] h-[500px]">

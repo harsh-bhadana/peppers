@@ -2,9 +2,7 @@
 
 import StoreMap from "../components/StoreMap";
 import GoogleStoresMap from "../components/GoogleStoresMap";
-import StoreTimeline from "../components/StoreTimeline";
 import StoreStats, { Counter } from "../components/StoreStats";
-import JourneyRoadmap from "../components/JourneyRoadmap";
 import { motion } from "framer-motion";
 
 export default function StoresPage() {
@@ -89,26 +87,6 @@ export default function StoresPage() {
               </div>
             </div>
           </div>
-
-          {/* Journey Roadmap Section */}
-          <section className="mb-32">
-            <JourneyRoadmap />
-          </section>
-
-          {/* Timeline Section */}
-          <section className="bg-black/40 backdrop-blur-xl p-12 rounded-[3rem] border border-white/10">
-            <div className="mb-24 text-center">
-              <h2 className="text-xs font-black uppercase tracking-[0.3em] text-primary-red mb-2">
-                Opening Sequence
-              </h2>
-              <div className="h-[1px] w-24 bg-primary-red mx-auto mb-6" />
-              <h3 className="text-4xl md:text-6xl font-black uppercase tracking-tighter shadow-black drop-shadow-2xl">
-                Chronological Roadmap
-              </h3>
-            </div>
-
-            <StoreTimeline />
-          </section>
         </motion.div>
       </div>
     </main>
