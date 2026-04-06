@@ -19,6 +19,7 @@ export const metadata: Metadata = {
 };
 
 import { CartProvider } from "./context/CartContext";
+import { DeliveryProvider } from "./context/DeliveryContext";
 import CartSidebar from "./components/CartSidebar";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -33,12 +34,14 @@ export default function RootLayout({
       <body
         className={`${oswald.variable} ${inter.variable} font-sans antialiased bg-black text-white`}
       >
-        <CartProvider>
-          <Header />
-          <CartSidebar />
-          {children}
-          <Footer />
-        </CartProvider>
+        <DeliveryProvider>
+          <CartProvider>
+            <Header />
+            <CartSidebar />
+            {children}
+            <Footer />
+          </CartProvider>
+        </DeliveryProvider>
       </body>
     </html>
   );
