@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import MenuItemCard, { menuItems } from "../components/MenuItemCard";
 
-const categories = ["All", "Pizza", "Burgers", "Sides"];
+const categories = ["All", "Pizza", "Burgers", "Sides", "Drinks"];
 
 export default function MenuPage() {
   const [activeCategory, setActiveCategory] = useState("All");

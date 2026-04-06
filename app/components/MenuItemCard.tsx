@@ -14,11 +14,12 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
+  // --- Pizzas ---
   {
     id: 1,
     name: "Misty Truffle",
     description: "Wild mushrooms, white truffle oil, mozzarella, and fresh thyme on our signature sourdough.",
-    price: "$24",
+    price: "₹599",
     category: "Pizza",
     image: "/assets/menu/pizza_menu_1.png"
   },
@@ -26,33 +27,116 @@ const menuItems: MenuItem[] = [
     id: 2,
     name: "Peri-Peri Paneer",
     description: "Chunky paneer cubes, smoky peri-peri glaze, roasted peppers, and caramelized onions.",
-    price: "$22",
+    price: "₹549",
     category: "Pizza",
     image: "/assets/menu/pizza_menu_3.png"
   },
   {
     id: 3,
+    name: "Smoky BBQ Chicken",
+    description: "Tender grilled chicken, smoky BBQ sauce, caramelised onions, and jalapeños on a crispy thin crust.",
+    price: "₹629",
+    category: "Pizza",
+    image: "/assets/menu/pizza_menu_1.png"
+  },
+  {
+    id: 4,
+    name: "Margherita Supreme",
+    description: "San Marzano tomatoes, fresh buffalo mozzarella, extra virgin olive oil, and hand-torn basil.",
+    price: "₹449",
+    category: "Pizza",
+    image: "/assets/menu/pizza_menu_3.png"
+  },
+  // --- Burgers ---
+  {
+    id: 5,
     name: "Planet Alliance",
     description: "Thick plant-based patty, melting vegan cheese, avocado, and fresh sprouts on a charcoal bun.",
-    price: "$26",
+    price: "₹649",
     category: "Burgers",
     image: "/assets/menu/burger_menu_3.png"
   },
   {
-    id: 4,
+    id: 6,
+    name: "Double Smash",
+    description: "Two smashed beef patties, American cheese, caramelised onions, house pickles, and secret sauce.",
+    price: "₹699",
+    category: "Burgers",
+    image: "/assets/menu/burger_menu_3.png"
+  },
+  {
+    id: 7,
+    name: "Crispy Chicken King",
+    description: "Buttermilk fried chicken thigh, sriracha mayo, coleslaw, and pickled cucumber on a brioche bun.",
+    price: "₹579",
+    category: "Burgers",
+    image: "/assets/menu/burger_menu_3.png"
+  },
+  {
+    id: 8,
+    name: "Mushroom Meltdown",
+    description: "Sautéed portobello mushrooms, Swiss cheese, garlic aioli, and rocket on a sesame seed bun.",
+    price: "₹529",
+    category: "Burgers",
+    image: "/assets/menu/burger_menu_3.png"
+  },
+  // --- Sides ---
+  {
+    id: 9,
     name: "Truffle Parm Fries",
     description: "Hand-cut fries tossed in truffle salt, aged parmesan, and fresh garden parsley.",
-    price: "$12",
+    price: "₹299",
     category: "Sides",
     image: "/assets/menu/side_menu_1.png"
-  }
+  },
+  {
+    id: 10,
+    name: "Loaded Nachos",
+    description: "Crispy corn tortillas piled with jalapeños, salsa, sour cream, melted cheddar, and guacamole.",
+    price: "₹349",
+    category: "Sides",
+    image: "/assets/menu/side_menu_1.png"
+  },
+  {
+    id: 11,
+    name: "Garlic Bread Royale",
+    description: "Thick-cut sourdough toasted with house garlic butter, mozzarella, and fresh herbs.",
+    price: "₹249",
+    category: "Sides",
+    image: "/assets/menu/side_menu_1.png"
+  },
+  // --- Drinks ---
+  {
+    id: 12,
+    name: "Mango Jaljeera",
+    description: "Chilled raw mango cooler with roasted cumin, black salt, and fresh mint — a desi summertime classic.",
+    price: "₹149",
+    category: "Drinks",
+    image: "/assets/menu/side_menu_1.png"
+  },
+  {
+    id: 13,
+    name: "Activated Charcoal Lemonade",
+    description: "Fresh lemon, activated charcoal, ginger syrup, and sparkling water — dark, refreshing, dramatic.",
+    price: "₹199",
+    category: "Drinks",
+    image: "/assets/menu/side_menu_1.png"
+  },
+  {
+    id: 14,
+    name: "Masala Cold Coffee",
+    description: "Cold brewed coffee shaken with cardamom, cinnamon, and condensed milk over crushed ice.",
+    price: "₹179",
+    category: "Drinks",
+    image: "/assets/menu/side_menu_1.png"
+  },
 ];
 
 export default function MenuItemCard({ item }: { item: MenuItem }) {
   const { addToCart } = useCart();
 
   const handleAddToCart = () => {
-    const priceNum = parseFloat(item.price.replace("$", ""));
+    const priceNum = parseFloat(item.price.replace("₹", "").replace(/,/g, ""));
     addToCart({
       id: item.id.toString(),
       name: item.name,
