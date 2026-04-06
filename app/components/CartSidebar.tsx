@@ -118,6 +118,18 @@ export default function CartSidebar() {
                       <div>
                         <h3 className="font-bold uppercase tracking-wider text-sm">{item.name}</h3>
                         <p className="text-primary-red font-black text-sm mt-1">₹{item.price.toFixed(0)}</p>
+                        {item.customizations && item.customizations.length > 0 && (
+                          <div className="flex flex-wrap gap-1 mt-1.5">
+                            {item.customizations.map((c, i) => (
+                              <span
+                                key={i}
+                                className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-white/40"
+                              >
+                                {c.label}
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </div>
                       <div className="flex items-center gap-3 mt-2">
                         <button

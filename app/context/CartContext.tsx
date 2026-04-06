@@ -2,12 +2,19 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 
+export type Customization = {
+  label: string;   // e.g. "Extra Cheese"
+  price: number;   // additional cost in ₹
+};
+
 export type CartItem = {
-  id: string;
+  id: string;        // composite: `${menuItemId}-${customizationKey}`
+  menuItemId: string;
   name: string;
-  price: number;
+  price: number;     // base price + add-ons
   quantity: number;
   image?: string;
+  customizations: Customization[];
 };
 
 type CartContextType = {
@@ -48,6 +55,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addToCart = (newItem: Omit<CartItem, "quantity">) => {
     setItems((currentItems) => {
+      // Match by composite id (includes customization fingerprint)
       const existingItem = currentItems.find((item) => item.id === newItem.id);
       if (existingItem) {
         return currentItems.map((item) =>
