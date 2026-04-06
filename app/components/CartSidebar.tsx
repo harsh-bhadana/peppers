@@ -2,22 +2,35 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Minus, Plus, ShoppingBag, Loader2 } from "lucide-react";
+import { X, Minus, Plus, ShoppingBag, Loader2, Clock } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import { useDelivery } from "../context/DeliveryContext";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import DeliveryModeToggle from "./DeliveryModeToggle";
+import PincodeChecker from "./PincodeChecker";
 
 export default function CartSidebar() {
   const { items, isCartOpen, setIsCartOpen, updateQuantity, removeFromCart, cartTotal } = useCart();
+  const { mode, isPincodeValid } = useDelivery();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const router = useRouter();
+
+  const canCheckout =
+    items.length > 0 &&
+    (mode === "pickup" || isPincodeValid === true);
 
   const handleCheckout = () => {
     setIsCheckingOut(true);
-    // Simulate checkout process
     setTimeout(() => {
       setIsCheckingOut(false);
-      alert("Checkout simulation complete!");
-    }, 2000);
+      setIsCartOpen(false);
+      router.push("/order-tracker");
+    }, 1200);
   };
+
+  const etaLabel =
+    mode === "delivery" ? "Est. 35–45 mins" : "Ready in ~15 mins";
 
   return (
     <AnimatePresence>
@@ -52,6 +65,25 @@ export default function CartSidebar() {
               >
                 <X size={24} />
               </button>
+            </div>
+
+            {/* Delivery Controls */}
+            <div className="px-6 pt-5 pb-4 border-b border-white/5 space-y-4">
+              <DeliveryModeToggle />
+              <AnimatePresence>
+                {mode === "delivery" && (
+                  <motion.div
+                    key="pincode"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="overflow-hidden"
+                  >
+                    <PincodeChecker />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Cart Items */}
@@ -110,15 +142,42 @@ export default function CartSidebar() {
 
             {/* Footer / Checkout */}
             {items.length > 0 && (
-              <div className="p-6 border-t border-white/5 bg-black/50 backdrop-blur-md">
-                <div className="flex justify-between items-center mb-6">
+              <div className="p-6 border-t border-white/5 bg-black/50 backdrop-blur-md space-y-4">
+                {/* ETA Badge */}
+                <motion.div
+                  key={mode}
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-center gap-2 text-xs font-bold text-white/50"
+                >
+                  <Clock size={13} className="text-primary-red animate-pulse" />
+                  {etaLabel}
+                </motion.div>
+
+                {/* Total */}
+                <div className="flex justify-between items-center">
                   <span className="text-sm font-bold uppercase tracking-widest text-white/60">Total</span>
                   <span className="text-2xl font-black text-white">₹{cartTotal.toFixed(0)}</span>
                 </div>
+
+                {/* Pincode warning */}
+                <AnimatePresence>
+                  {mode === "delivery" && isPincodeValid !== true && (
+                    <motion.p
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="text-[10px] font-bold uppercase tracking-wider text-yellow-400/70"
+                    >
+                      ⚠ Please verify your pincode to proceed
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+
                 <button
                   onClick={handleCheckout}
-                  disabled={isCheckingOut}
-                  className="w-full h-14 flex items-center justify-center bg-primary-red hover:bg-white hover:text-black text-white text-sm font-black tracking-widest uppercase transition-colors duration-300 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isCheckingOut || !canCheckout}
+                  className="w-full h-14 flex items-center justify-center bg-primary-red hover:bg-white hover:text-black text-white text-sm font-black tracking-widest uppercase transition-colors duration-300 relative overflow-hidden group disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   <span className="relative z-10 flex items-center gap-2">
                     {isCheckingOut ? (
