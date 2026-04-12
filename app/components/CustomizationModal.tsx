@@ -84,12 +84,19 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 // ─── Main Modal ───────────────────────────────────────────────────────────────
 
 export interface MenuItemForModal {
-  id: number;
+  id: string;
   name: string;
-  description: string;
-  price: string;
+  description?: string;
+  prices: {
+    small?: number;
+    medium?: number;
+    large?: number;
+    default?: number;
+  };
   category: string;
+  subcategory?: string;
   image: string;
+  isCustomizable?: boolean;
 }
 
 export default function CustomizationModal({
@@ -101,15 +108,30 @@ export default function CustomizationModal({
 }) {
   const { addToCart } = useCart();
 
-  const basePrice = parseFloat(item.price.replace("₹", "").replace(/,/g, ""));
+  // Determine available sizes
+  const availableSizes = useMemo(() => {
+    const sizes: { id: string; label: string; price: number }[] = [];
+    if (item.prices.small) sizes.push({ id: "small", label: "Small", price: item.prices.small });
+    if (item.prices.medium) sizes.push({ id: "medium", label: "Medium", price: item.prices.medium });
+    if (item.prices.large) sizes.push({ id: "large", label: "Large", price: item.prices.large });
+    if (item.prices.default) sizes.push({ id: "default", label: "Standard", price: item.prices.default });
+    return sizes;
+  }, [item.prices]);
 
-  // For single-select (crust, cheese, spice): store selected id
-  const [crust,  setCrust]  = useState("thin");
+  const [selectedSize, setSelectedSize] = useState(availableSizes[0]?.id || "default");
+  const [crust, setCrust] = useState("thin");
   const [cheese, setCheese] = useState("none");
-  const [spice,  setSpice]  = useState("mild");
-
-  // For multi-select (toppings): store set of ids
+  const [spice, setSpice] = useState("mild");
   const [toppings, setToppings] = useState<Set<string>>(new Set());
+
+  // Dynamic topping price based on size
+  const toppingUnitPrice = useMemo(() => {
+    if (selectedSize === "large") return 60;
+    if (selectedSize === "medium") return 50;
+    return 30; // small or default
+  }, [selectedSize]);
+
+  const basePrice = availableSizes.find(s => s.id === selectedSize)?.price || 0;
 
   const toggleTopping = (id: string) => {
     setToppings((prev) => {
@@ -121,13 +143,11 @@ export default function CustomizationModal({
 
   // Computed add-on price
   const addOnTotal = useMemo(() => {
-    const crustPrice   = CRUST_OPTIONS.find(o => o.id === crust)?.price ?? 0;
-    const cheesePrice  = CHEESE_OPTIONS.find(o => o.id === cheese)?.price ?? 0;
-    const toppingPrice = EXTRA_TOPPINGS
-      .filter(t => toppings.has(t.id))
-      .reduce((s, t) => s + t.price, 0);
+    const crustPrice = CRUST_OPTIONS.find(o => o.id === crust)?.price ?? 0;
+    const cheesePrice = CHEESE_OPTIONS.find(o => o.id === cheese)?.price ?? 0;
+    const toppingPrice = toppings.size * toppingUnitPrice;
     return crustPrice + cheesePrice + toppingPrice;
-  }, [crust, cheese, toppings]);
+  }, [crust, cheese, toppings, toppingUnitPrice]);
 
   const totalPrice = basePrice + addOnTotal;
 
@@ -135,8 +155,13 @@ export default function CustomizationModal({
   const isPizza = item.category === "Pizza";
 
   const handleAddToCart = () => {
-    // Build customizations list
     const customizations: Customization[] = [];
+
+    // Size customization
+    const sizeLabel = availableSizes.find(s => s.id === selectedSize)?.label;
+    if (sizeLabel && sizeLabel !== "Standard") {
+      customizations.push({ label: `Size: ${sizeLabel}`, price: 0 });
+    }
 
     if (isPizza) {
       const crustLabel = CRUST_OPTIONS.find(o => o.id === crust)!;
@@ -153,12 +178,13 @@ export default function CustomizationModal({
     const spiceOpt = SPICE_OPTIONS.find(o => o.id === spice)!;
     customizations.push({ label: `Spice: ${spiceOpt.label}`, price: 0 });
 
-    EXTRA_TOPPINGS.filter(t => toppings.has(t.id)).forEach(t => {
-      customizations.push({ label: t.label, price: t.price });
+    [...toppings].forEach(tId => {
+      const tLabel = EXTRA_TOPPINGS.find(o => o.id === tId)?.label || tId;
+      customizations.push({ label: tLabel, price: toppingUnitPrice });
     });
 
-    // Build a fingerprint for the composite id
     const fingerprint = [
+      selectedSize,
       isPizza ? crust : "",
       cheese,
       spice,
@@ -167,7 +193,7 @@ export default function CustomizationModal({
 
     addToCart({
       id: `${item.id}-${fingerprint}`,
-      menuItemId: item.id.toString(),
+      menuItemId: item.id,
       name: item.name,
       price: totalPrice,
       image: item.image,
@@ -186,10 +212,8 @@ export default function CustomizationModal({
         className="fixed inset-0 z-[80] flex items-end md:items-center justify-center p-4"
         onClick={onClose}
       >
-        {/* Backdrop */}
         <div className="absolute inset-0 bg-black/80 backdrop-blur-md" />
 
-        {/* Modal panel */}
         <motion.div
           initial={{ opacity: 0, y: 60, scale: 0.97 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -203,7 +227,6 @@ export default function CustomizationModal({
             <Image src={item.image} alt={item.name} fill className="object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent" />
 
-            {/* Close */}
             <button
               onClick={onClose}
               className="absolute top-4 right-4 p-2 rounded-full bg-black/60 backdrop-blur border border-white/10 text-white/70 hover:text-white transition"
@@ -211,10 +234,9 @@ export default function CustomizationModal({
               <X size={16} />
             </button>
 
-            {/* Name + price overlay */}
             <div className="absolute bottom-4 left-6 right-6">
               <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary-red mb-1">
-                {item.category}
+                {item.category} {item.subcategory ? `· ${item.subcategory}` : ""}
               </p>
               <h2 className="text-2xl font-black uppercase tracking-tighter text-white leading-none">
                 {item.name}
@@ -222,78 +244,98 @@ export default function CustomizationModal({
             </div>
           </div>
 
-          {/* Scrollable content */}
           <div className="flex-1 overflow-y-auto px-6 py-5 space-y-6 no-scrollbar">
-
-            {/* Description */}
             <p className="text-xs text-white/40 leading-relaxed font-medium uppercase tracking-wider">
-              {item.description}
+              {item.description || "Freshly prepared with premium ingredients for the ultimate taste."}
             </p>
 
-            {/* Crust — pizza only */}
-            {isPizza && (
+            {/* Size Selection */}
+            {availableSizes.length > 1 && (
               <div>
-                <SectionLabel>Crust Type</SectionLabel>
-                <div className="grid grid-cols-2 gap-2">
-                  {CRUST_OPTIONS.map((o) => (
-                    <OptionPill
-                      key={o.id}
-                      option={o}
-                      selected={crust === o.id}
-                      onToggle={() => setCrust(o.id)}
-                    />
+                <SectionLabel>Select Size</SectionLabel>
+                <div className="grid grid-cols-3 gap-2">
+                  {availableSizes.map((s) => (
+                    <button
+                      key={s.id}
+                      onClick={() => setSelectedSize(s.id)}
+                      className={`px-3 py-3 rounded-xl border text-xs font-black uppercase tracking-widest transition-all ${
+                        selectedSize === s.id
+                          ? "bg-primary-red border-primary-red text-white"
+                          : "bg-white/5 border-white/10 text-white/40 hover:border-white/20"
+                      }`}
+                    >
+                      {s.label}
+                    </button>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Extra Cheese */}
-            <div>
-              <SectionLabel>Extra Cheese</SectionLabel>
-              <div className="grid grid-cols-2 gap-2">
-                {CHEESE_OPTIONS.map((o) => (
-                  <OptionPill
-                    key={o.id}
-                    option={o}
-                    selected={cheese === o.id}
-                    onToggle={() => setCheese(o.id)}
-                  />
-                ))}
-              </div>
-            </div>
+            {isPizza && item.id.startsWith("p") && !item.subcategory?.includes("Topping") && (
+              <>
+                <div>
+                  <SectionLabel>Crust Type</SectionLabel>
+                  <div className="grid grid-cols-2 gap-2">
+                    {CRUST_OPTIONS.map((o) => (
+                      <OptionPill
+                        key={o.id}
+                        option={o}
+                        selected={crust === o.id}
+                        onToggle={() => setCrust(o.id)}
+                      />
+                    ))}
+                  </div>
+                </div>
 
-            {/* Spice Level */}
-            <div>
-              <SectionLabel>Spice Level</SectionLabel>
-              <div className="grid grid-cols-2 gap-2">
-                {SPICE_OPTIONS.map((o) => (
-                  <OptionPill
-                    key={o.id}
-                    option={o}
-                    selected={spice === o.id}
-                    onToggle={() => setSpice(o.id)}
-                  />
-                ))}
-              </div>
-            </div>
+                <div>
+                  <SectionLabel>Extra Toppings (₹{toppingUnitPrice} each)</SectionLabel>
+                  <div className="grid grid-cols-2 gap-2">
+                    {EXTRA_TOPPINGS.map((o) => (
+                      <OptionPill
+                        key={o.id}
+                        option={{ ...o, price: toppingUnitPrice }}
+                        selected={toppings.has(o.id)}
+                        onToggle={() => toggleTopping(o.id)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
 
-            {/* Extra Toppings */}
-            <div>
-              <SectionLabel>Extra Toppings</SectionLabel>
-              <div className="grid grid-cols-2 gap-2">
-                {EXTRA_TOPPINGS.map((o) => (
-                  <OptionPill
-                    key={o.id}
-                    option={o}
-                    selected={toppings.has(o.id)}
-                    onToggle={() => toggleTopping(o.id)}
-                  />
-                ))}
-              </div>
-            </div>
+            {item.isCustomizable !== false && (
+              <>
+                <div>
+                  <SectionLabel>Extra Cheese</SectionLabel>
+                  <div className="grid grid-cols-2 gap-2">
+                    {CHEESE_OPTIONS.map((o) => (
+                      <OptionPill
+                        key={o.id}
+                        option={o}
+                        selected={cheese === o.id}
+                        onToggle={() => setCheese(o.id)}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <SectionLabel>Spice Level</SectionLabel>
+                  <div className="grid grid-cols-2 gap-2">
+                    {SPICE_OPTIONS.map((o) => (
+                      <OptionPill
+                        key={o.id}
+                        option={o}
+                        selected={spice === o.id}
+                        onToggle={() => setSpice(o.id)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
-          {/* Footer CTA */}
           <div className="flex-shrink-0 px-6 py-5 border-t border-white/5 bg-black/40 backdrop-blur">
             <div className="flex items-center justify-between mb-4">
               <div>
@@ -315,7 +357,7 @@ export default function CustomizationModal({
             </div>
             <button
               onClick={handleAddToCart}
-              className="w-full h-13 py-4 flex items-center justify-center gap-3 bg-primary-red hover:bg-white hover:text-black text-white text-sm font-black tracking-widest uppercase transition-colors duration-300 rounded-xl"
+              className="w-full h-13 py-4 flex items-center justify-center gap-3 bg-primary-red hover:bg-white hover:text-black text-white text-sm font-black tracking-widest uppercase transition-colors duration-300 rounded-xl shadow-[0_10px_30px_rgba(255,59,48,0.2)]"
             >
               <ShoppingBag size={16} />
               Add to Alliance
