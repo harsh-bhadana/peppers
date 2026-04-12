@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Store, Rocket, Trophy, Globe } from "lucide-react";
-import PizzaA from "./PizzaA";
+
 
 const milestones = [
   {
