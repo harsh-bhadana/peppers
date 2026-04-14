@@ -83,7 +83,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 // ─── Main Modal ───────────────────────────────────────────────────────────────
 
-export interface MenuItemForModal {
+interface MenuItemForModal {
   id: string;
   name: string;
   description?: string;

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { SlidersHorizontal } from "lucide-react";
 import CustomizationModal from "./CustomizationModal";
 
-export interface MenuItem {
+interface MenuItem {
   id: string; // Changed to string for flexibility
   name: string;
   description?: string;

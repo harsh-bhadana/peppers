@@ -7,7 +7,7 @@ export type Customization = {
   price: number;   // additional cost in ₹
 };
 
-export type CartItem = {
+type CartItem = {
   id: string;        // composite: `${menuItemId}-${customizationKey}`
   menuItemId: string;
   name: string;
