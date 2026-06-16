@@ -6,129 +6,431 @@ import { motion } from "framer-motion";
 import { SlidersHorizontal } from "lucide-react";
 import CustomizationModal from "./CustomizationModal";
 
-export interface MenuItem {
-  id: number;
+interface MenuItem {
+  id: string; // Changed to string for flexibility
   name: string;
-  description: string;
-  price: string;
+  description?: string;
+  prices: {
+    small?: number;
+    medium?: number;
+    large?: number;
+    default?: number;
+  };
   category: string;
+  subcategory?: string;
   image: string;
+  isCustomizable?: boolean;
 }
 
 export const menuItems: MenuItem[] = [
-  // --- Pizzas ---
+  // --- Veg Pizza: Simply Veg ---
   {
-    id: 1,
-    name: "Misty Truffle",
-    description: "Wild mushrooms, white truffle oil, mozzarella, and fresh thyme on our signature sourdough.",
-    price: "₹599",
+    id: "p1",
+    name: "Cheese Pizza",
+    prices: { small: 105, medium: 219, large: 352 },
     category: "Pizza",
+    subcategory: "Simply Veg",
+    image: "/assets/menu/pizza_menu_1.png",
+    isCustomizable: true
+  },
+  {
+    id: "p2",
+    name: "Cheese & Corn",
+    prices: { small: 105, medium: 219, large: 352 },
+    category: "Pizza",
+    subcategory: "Simply Veg",
+    image: "/assets/menu/pizza_menu_3.png",
+    isCustomizable: true
+  },
+  {
+    id: "p3",
+    name: "Cheese & Onion",
+    prices: { small: 105, medium: 219, large: 352 },
+    category: "Pizza",
+    subcategory: "Simply Veg",
+    image: "/assets/menu/pizza_menu_1.png",
+    isCustomizable: true
+  },
+  // --- Veg Pizza: Veg Delight ---
+  {
+    id: "p4",
+    name: "Double Cheese Pizza",
+    prices: { small: 142, medium: 265, large: 428 },
+    category: "Pizza",
+    subcategory: "Veg Delight",
+    image: "/assets/menu/pizza_menu_3.png",
+    isCustomizable: true
+  },
+  {
+    id: "p5",
+    name: "Garden Fresh",
+    prices: { small: 142, medium: 265, large: 428 },
+    category: "Pizza",
+    subcategory: "Veg Delight",
+    image: "/assets/menu/pizza_menu_1.png",
+    isCustomizable: true
+  },
+  {
+    id: "p6",
+    name: "Cheese & Paneer",
+    prices: { small: 142, medium: 265, large: 428 },
+    category: "Pizza",
+    subcategory: "Veg Delight",
+    image: "/assets/menu/pizza_menu_3.png",
+    isCustomizable: true
+  },
+  // --- Veg Pizza: Veg Treat ---
+  {
+    id: "p7",
+    name: "Farmfresh",
+    prices: { small: 190, medium: 343, large: 495 },
+    category: "Pizza",
+    subcategory: "Veg Treat",
+    image: "/assets/menu/pizza_menu_1.png",
+    isCustomizable: true
+  },
+  {
+    id: "p8",
+    name: "Country Feast",
+    prices: { small: 190, medium: 343, large: 495 },
+    category: "Pizza",
+    subcategory: "Veg Treat",
+    image: "/assets/menu/pizza_menu_3.png",
+    isCustomizable: true
+  },
+  {
+    id: "p9",
+    name: "Spicy Tango Pizza",
+    prices: { small: 190, medium: 343, large: 495 },
+    category: "Pizza",
+    subcategory: "Veg Treat",
+    image: "/assets/menu/pizza_menu_1.png",
+    isCustomizable: true
+  },
+  {
+    id: "p10",
+    name: "Wonder Pizza",
+    prices: { small: 190, medium: 343, large: 495 },
+    category: "Pizza",
+    subcategory: "Veg Treat",
+    image: "/assets/menu/pizza_menu_3.png",
+    isCustomizable: true
+  },
+  // --- Veg Pizza: Veg Special ---
+  {
+    id: "p11",
+    name: "Spicy Paneer",
+    prices: { small: 219, medium: 380, large: 505 },
+    category: "Pizza",
+    subcategory: "Veg Special",
+    image: "/assets/menu/pizza_menu_1.png",
+    isCustomizable: true
+  },
+  {
+    id: "p12",
+    name: "Three Peppers",
+    prices: { small: 219, medium: 380, large: 505 },
+    category: "Pizza",
+    subcategory: "Veg Special",
+    image: "/assets/menu/pizza_menu_3.png",
+    isCustomizable: true
+  },
+  {
+    id: "p13",
+    name: "Delicious Pizza",
+    prices: { small: 219, medium: 380, large: 505 },
+    category: "Pizza",
+    subcategory: "Veg Special",
+    image: "/assets/menu/pizza_menu_1.png",
+    isCustomizable: true
+  },
+  {
+    id: "p14",
+    name: "Veggie Lovers",
+    prices: { small: 219, medium: 380, large: 505 },
+    category: "Pizza",
+    subcategory: "Veg Special",
+    image: "/assets/menu/pizza_menu_3.png",
+    isCustomizable: true
+  },
+  {
+    id: "p15",
+    name: "Achari Pizza",
+    prices: { small: 219, medium: 380, large: 505 },
+    category: "Pizza",
+    subcategory: "Veg Special",
+    image: "/assets/menu/pizza_menu_1.png",
+    isCustomizable: true
+  },
+  // --- Veg Feast & Specials ---
+  {
+    id: "p16",
+    name: "Veg Feast Pizza",
+    prices: { small: 248, medium: 400, large: 562 },
+    category: "Pizza",
+    description: "Classic veg supreme with all toppings.",
+    image: "/assets/menu/pizza_menu_3.png",
+    isCustomizable: true
+  },
+  {
+    id: "p17",
+    name: "Cloud One Pizza",
+    prices: { small: 248, medium: 400, large: 562 },
+    category: "Pizza",
+    description: "Onion, Capsicum, Fresh Tomato, Jalapeno, Golden Corn, Paneer, Olive & Mushroom.",
+    image: "/assets/menu/pizza_menu_1.png",
+    isCustomizable: true
+  },
+  {
+    id: "p18",
+    name: "Chef's Veg Special Pizza",
+    prices: { small: 248, medium: 400, large: 562 },
+    category: "Pizza",
+    description: "Red Paprika, Capsicum, Mushroom, Jalapeno, Paneer, Grilled Mushroom.",
+    image: "/assets/menu/pizza_menu_3.png",
+    isCustomizable: true
+  },
+  // --- Single/Double Topping ---
+  {
+    id: "p19",
+    name: "Tomato Pizza",
+    prices: { default: 62 },
+    category: "Pizza",
+    subcategory: "Single Topping",
     image: "/assets/menu/pizza_menu_1.png"
   },
   {
-    id: 2,
-    name: "Peri-Peri Paneer",
-    description: "Chunky paneer cubes, smoky peri-peri glaze, roasted peppers, and caramelized onions.",
-    price: "₹549",
+    id: "p20",
+    name: "Onion Pizza",
+    prices: { default: 71 },
     category: "Pizza",
+    subcategory: "Single Topping",
     image: "/assets/menu/pizza_menu_3.png"
   },
   {
-    id: 3,
-    name: "Smoky BBQ Chicken",
-    description: "Tender grilled chicken, smoky BBQ sauce, caramelised onions, and jalapeños on a crispy thin crust.",
-    price: "₹629",
+    id: "p21",
+    name: "Capsicum Pizza",
+    prices: { default: 76 },
     category: "Pizza",
+    subcategory: "Single Topping",
     image: "/assets/menu/pizza_menu_1.png"
   },
   {
-    id: 4,
-    name: "Margherita Supreme",
-    description: "San Marzano tomatoes, fresh buffalo mozzarella, extra virgin olive oil, and hand-torn basil.",
-    price: "₹449",
+    id: "p22",
+    name: "Corn Pizza",
+    prices: { default: 76 },
     category: "Pizza",
+    subcategory: "Single Topping",
+    image: "/assets/menu/pizza_menu_3.png"
+  },
+  {
+    id: "p23",
+    name: "Onion & Capsicum",
+    prices: { default: 105 },
+    category: "Pizza",
+    subcategory: "Double Topping",
+    image: "/assets/menu/pizza_menu_1.png"
+  },
+  {
+    id: "p24",
+    name: "Tomato & Corn",
+    prices: { default: 105 },
+    category: "Pizza",
+    subcategory: "Double Topping",
+    image: "/assets/menu/pizza_menu_3.png"
+  },
+  {
+    id: "p25",
+    name: "Jalapeno & Onion",
+    prices: { default: 105 },
+    category: "Pizza",
+    subcategory: "Double Topping",
+    image: "/assets/menu/pizza_menu_1.png"
+  },
+  {
+    id: "p26",
+    name: "Onion & Paneer",
+    prices: { default: 105 },
+    category: "Pizza",
+    subcategory: "Double Topping",
     image: "/assets/menu/pizza_menu_3.png"
   },
   // --- Burgers ---
   {
-    id: 5,
-    name: "Planet Alliance",
-    description: "Thick plant-based patty, melting vegan cheese, avocado, and fresh sprouts on a charcoal bun.",
-    price: "₹649",
+    id: "b1",
+    name: "Potato Crispy Burger",
+    prices: { default: 39 },
+    category: "Burgers",
+    image: "/assets/menu/potato_burger.png"
+  },
+  {
+    id: "b2",
+    name: "Cheese Burger",
+    prices: { default: 52 },
     category: "Burgers",
     image: "/assets/menu/burger_menu_3.png"
   },
   {
-    id: 6,
-    name: "Double Smash",
-    description: "Two smashed beef patties, American cheese, caramelised onions, house pickles, and secret sauce.",
-    price: "₹699",
+    id: "b3",
+    name: "Veg Delight Burger",
+    prices: { default: 57 },
     category: "Burgers",
     image: "/assets/menu/burger_menu_3.png"
   },
   {
-    id: 7,
-    name: "Crispy Chicken King",
-    description: "Buttermilk fried chicken thigh, sriracha mayo, coleslaw, and pickled cucumber on a brioche bun.",
-    price: "₹579",
+    id: "b4",
+    name: "Achari Paneer Burger",
+    prices: { default: 67 },
     category: "Burgers",
     image: "/assets/menu/burger_menu_3.png"
   },
   {
-    id: 8,
-    name: "Mushroom Meltdown",
-    description: "Sautéed portobello mushrooms, Swiss cheese, garlic aioli, and rocket on a sesame seed bun.",
-    price: "₹529",
+    id: "b5",
+    name: "Pepper's Spl. Burger",
+    prices: { default: 77 },
     category: "Burgers",
     image: "/assets/menu/burger_menu_3.png"
+  },
+  // --- Pasta ---
+  {
+    id: "pa1",
+    name: "Veg Red Pasta",
+    prices: { default: 95 },
+    category: "Pasta",
+    image: "/assets/menu/side_menu_1.png"
+  },
+  {
+    id: "pa2",
+    name: "Veg White Pasta",
+    prices: { default: 105 },
+    category: "Pasta",
+    image: "/assets/menu/side_menu_1.png"
+  },
+  {
+    id: "pa3",
+    name: "Mix Sauce Pasta",
+    prices: { default: 119 },
+    category: "Pasta",
+    image: "/assets/menu/side_menu_1.png"
   },
   // --- Sides ---
   {
-    id: 9,
-    name: "Truffle Parm Fries",
-    description: "Hand-cut fries tossed in truffle salt, aged parmesan, and fresh garden parsley.",
-    price: "₹299",
+    id: "s1",
+    name: "Garlic Bread with Cheese Dip",
+    prices: { default: 109 },
     category: "Sides",
     image: "/assets/menu/side_menu_1.png"
   },
   {
-    id: 10,
-    name: "Loaded Nachos",
-    description: "Crispy corn tortillas piled with jalapeños, salsa, sour cream, melted cheddar, and guacamole.",
-    price: "₹349",
+    id: "s2",
+    name: "Stuffed Garlic Bread",
+    prices: { default: 129 },
     category: "Sides",
     image: "/assets/menu/side_menu_1.png"
   },
   {
-    id: 11,
-    name: "Garlic Bread Royale",
-    description: "Thick-cut sourdough toasted with house garlic butter, mozzarella, and fresh herbs.",
-    price: "₹249",
+    id: "s3",
+    name: "Veg Calzone Pocket",
+    prices: { default: 109 },
+    category: "Sides",
+    image: "/assets/menu/veg_calzone.png"
+  },
+  {
+    id: "s4",
+    name: "Zingy Parcel",
+    prices: { default: 39 },
     category: "Sides",
     image: "/assets/menu/side_menu_1.png"
+  },
+  {
+    id: "s5",
+    name: "French Fries",
+    prices: { default: 59 },
+    category: "Sides",
+    image: "/assets/menu/side_menu_1.png"
+  },
+  {
+    id: "s6",
+    name: "Peri-Peri French Fries",
+    prices: { default: 95 },
+    category: "Sides",
+    image: "/assets/menu/side_menu_1.png"
+  },
+  {
+    id: "s7",
+    name: "Chocolava Cake",
+    prices: { default: 85 },
+    category: "Sides",
+    image: "/assets/menu/chocolava_cake.png"
+  },
+  {
+    id: "s8",
+    name: "Cheese Dip",
+    prices: { default: 30 },
+    category: "Sides",
+    image: "/assets/menu/side_menu_1.png"
+  },
+  {
+    id: "s9",
+    name: "Jalapeno Dip",
+    prices: { default: 20 },
+    category: "Sides",
+    image: "/assets/menu/side_menu_1.png"
+  },
+  // --- Combos ---
+  {
+    id: "c1",
+    name: "Combo-1",
+    prices: { default: 170 },
+    category: "Combos",
+    description: "Double Toppings Pizza with Extra Cheese + Cheese Burger + Cold Drinks (250ml)",
+    image: "/assets/menu/pizza_menu_1.png"
+  },
+  {
+    id: "c2",
+    name: "Combo-2",
+    prices: { default: 315 },
+    category: "Combos",
+    description: "2 Double Topping Pizza with Extra Cheese + 2 Cheese Burger + Cold Drinks (500ml)",
+    image: "/assets/menu/pizza_menu_3.png"
+  },
+  {
+    id: "c3",
+    name: "Family Combo",
+    prices: { default: 560 },
+    category: "Combos",
+    description: "1 Medium Any Pizza + 1 Garlic Bread with Dip + 1 Parcel + 1 Chocolava Cake + Cold Drinks (500ml)",
+    image: "/assets/menu/pizza_menu_1.png"
+  },
+  {
+    id: "c4",
+    name: "Happy Family Combo",
+    prices: { default: 760 },
+    category: "Combos",
+    description: "2 Medium Any Pizza + 1 Garlic Bread with Dip + 1 Parcel + 1 Chocolava Cake + Cold Drinks (500ml)",
+    image: "/assets/menu/pizza_menu_3.png"
+  },
+  {
+    id: "set1",
+    name: "Set of 4 (Single Topping)",
+    prices: { default: 270 },
+    category: "Combos",
+    description: "Small 4 PCs of Single Topping Pizza. Save ₹15/-",
+    image: "/assets/menu/pizza_menu_1.png"
+  },
+  {
+    id: "set2",
+    name: "Set of 4 (Double Topping)",
+    prices: { default: 399 },
+    category: "Combos",
+    description: "Small 4 PCs of Double Topping Pizza. Save ₹25/-",
+    image: "/assets/menu/pizza_menu_3.png"
   },
   // --- Drinks ---
   {
-    id: 12,
-    name: "Mango Jaljeera",
-    description: "Chilled raw mango cooler with roasted cumin, black salt, and fresh mint — a desi summertime classic.",
-    price: "₹149",
-    category: "Drinks",
-    image: "/assets/menu/side_menu_1.png"
-  },
-  {
-    id: 13,
-    name: "Activated Charcoal Lemonade",
-    description: "Fresh lemon, activated charcoal, ginger syrup, and sparkling water — dark, refreshing, dramatic.",
-    price: "₹199",
-    category: "Drinks",
-    image: "/assets/menu/side_menu_1.png"
-  },
-  {
-    id: 14,
-    name: "Masala Cold Coffee",
-    description: "Cold brewed coffee shaken with cardamom, cinnamon, and condensed milk over crushed ice.",
-    price: "₹179",
+    id: "d1",
+    name: "Cold Coffee",
+    prices: { default: 99 },
     category: "Drinks",
     image: "/assets/menu/side_menu_1.png"
   },
@@ -136,6 +438,9 @@ export const menuItems: MenuItem[] = [
 
 export default function MenuItemCard({ item }: { item: MenuItem }) {
   const [showModal, setShowModal] = useState(false);
+
+  // Get display price (lowest available or default)
+  const displayPrice = item.prices.default || item.prices.small;
 
   return (
     <>
@@ -158,8 +463,15 @@ export default function MenuItemCard({ item }: { item: MenuItem }) {
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-60 transition-opacity duration-500 group-hover:opacity-40" />
 
           {/* Category Tag */}
-          <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white">
-            {item.category}
+          <div className="absolute top-4 left-4 flex flex-col gap-2 scale-90 origin-top-left">
+            <div className="bg-black/60 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white w-fit">
+              {item.category}
+            </div>
+            {item.subcategory && (
+              <div className="bg-primary-red/80 backdrop-blur-md border border-primary-red/20 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white w-fit">
+                {item.subcategory}
+              </div>
+            )}
           </div>
         </div>
 
@@ -171,11 +483,12 @@ export default function MenuItemCard({ item }: { item: MenuItem }) {
                 {item.name}
               </h3>
               <span className="text-xl font-black text-primary-red flex-shrink-0">
-                {item.price}
+                ₹{displayPrice}
+                {item.prices.small && <span className="text-[10px] ml-1 opacity-50">Onwards</span>}
               </span>
             </div>
-            <p className="text-sm text-white/50 leading-relaxed uppercase tracking-wider font-medium mb-8 line-clamp-3">
-              {item.description}
+            <p className="text-xs text-white/50 leading-relaxed uppercase tracking-wider font-medium mb-8 line-clamp-3">
+              {item.description || "Freshly prepared with premium ingredients for the ultimate taste."}
             </p>
           </div>
 
@@ -185,7 +498,7 @@ export default function MenuItemCard({ item }: { item: MenuItem }) {
             className="mt-auto w-full flex items-center justify-center gap-2 bg-white text-black py-4 rounded-xl font-black uppercase text-xs tracking-[0.2em] transition-all hover:bg-primary-red hover:text-white group-hover:shadow-[0_0_20px_rgba(255,59,48,0.3)]"
           >
             <SlidersHorizontal size={14} />
-            Customise & Add
+            {item.isCustomizable ? "Customise & Add" : "View & Add"}
           </button>
         </div>
       </motion.div>
