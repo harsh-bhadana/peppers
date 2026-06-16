@@ -25,8 +25,8 @@ export default function CartSidebar() {
     setTimeout(() => {
       setIsCheckingOut(false);
       setIsCartOpen(false);
-      router.push("/order-tracker");
-    }, 1200);
+      router.push("/checkout");
+    }, 800);
   };
 
   const etaLabel =

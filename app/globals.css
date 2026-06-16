@@ -54,3 +54,39 @@ body {
     scrollbar-width: none;
   }
 }
+
+/* Premium Page Transitions (View Transitions API) */
+@keyframes slide-in {
+  from {
+    transform: translateY(12px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-out {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-12px);
+    opacity: 0;
+  }
+}
+
+::view-transition-old(root) {
+  animation: 250ms cubic-bezier(0.16, 1, 0.3, 1) both slide-out;
+}
+
+::view-transition-new(root) {
+  animation: 350ms cubic-bezier(0.16, 1, 0.3, 1) both slide-in;
+}
+
+/* Enable cross-document transitions */
+@view-transition {
+  navigation: auto;
+}
